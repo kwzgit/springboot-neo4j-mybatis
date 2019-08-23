@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.UntowardEffectMapper">
+
+    <!-- 自定义结果集 ,结果集需要的字段再去建立专门的实体类UserModel来接收-->
+    <resultMap id="utMap" type="com.study.model.UntowardEffectModel">
+        <id property="name" column="name"/>
+        <id property="utName" column="utName"/>
+    </resultMap>
+
+
+    <select id="getUntowardEffectList" parameterType="list" resultMap="utMap">
+		match(d:Disease)-[r:不良反应]->(u:UntowardEffect) where d.name in #{disList}
+        return d.name as name,u.name as utName
+	</select>
+
+</mapper>

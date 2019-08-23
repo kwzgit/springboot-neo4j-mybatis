@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.PushDisMapper">
+
+    <!-- 自定义结果集 ,结果集需要的字段再去建立专门的实体类UserModel来接收-->
+    <resultMap id="disMap" type="com.study.model.DiseaseModel">
+        <id property="id" column="id"/>
+        <id property="disId" column="disId"/>
+        <result property="name" column="name"/>
+        <result property="emergency" column="emergency"/>
+    </resultMap>
+
+
+    <select id="getAll" resultMap="disMap">
+		match
+          (u:Disease)
+		return
+		  id(u) as id,u.name as name,u.disId as disId,u.emergency as emergency
+	</select>
+
+    <select id="getById" resultMap="disMap">
+		match
+		  (u:Disease)
+		where
+		  id(u) = #{id}
+		return
+         id(u) as id, u.name as name,u.disId as disId,u.emergency as emergency
+	</select>
+
+    <!--create(u:user{name:'aaa'}) - [l:like] -> (u1:user{name:'bbb'}) - [l1:like] -> (u2:user{name:'ccc'})-->
+    <insert id="add">
+        merge(u:Disease{name:#{model.name},disId:#{model.disId},emergency:#{model.emergency}})
+    </insert>
+
+    <update id="update">
+        match (u:Disease)
+        where u.disId = #{model.disId}
+        set u.name = #{model.name},u.emergency = #{model.emergency}
+    </update>
+
+    <delete id="deleteById">
+        match (u:Disease) where u.disId = #{disId} delete u
+    </delete>
+
+    <!--查找鉴别诊断-->
+    <select id="getDifferentDiagnose" resultMap="disMap">
+		match
+		  (u:Disease)-[r:鉴别诊断]->(d:Disease)
+		where
+		  u.name = #{mainDiag}
+		return
+         id(d) as id, d.name as name,d.disId as disId,d.emergency as emergency
+	</select>
+
+    <!--查找急诊-->
+    <select id="getEmergencyDiagnose" parameterType="list" resultMap="disMap">
+		match
+		  (d:Disease)
+		where
+		  d.name in #{disList} and d.emergency=1
+		return
+         id(d) as id, d.name as name,d.disId as disId,d.emergency as emergency
+	</select>
+
+
+</mapper>

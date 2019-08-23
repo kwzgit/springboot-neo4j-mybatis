@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.PushConditionMapper">
+
+    <resultMap id="conditionMap" type="com.study.model.ConditionModel">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="path" column="path"/>
+        <result property="relation" column="relation"/>
+    </resultMap>
+
+    <select id="firstCondition" parameterType="list" resultMap="conditionMap">
+		match (h)-[r:属于|:诊断依据]->(c:Condition)
+        where h.name in #{inputs}
+        return id(c) as id,c.name as name,c.path as path,c.relation as relation
+	</select>
+
+    <select id="secondCondition" parameterType="list" resultMap="conditionMap">
+		match (n:Condition)-[r:诊断依据]->(m:Condition)
+        where n.name in #{inputs}
+        with m, count(distinct r) as sd,m.path as jundgement
+        where sd>=jundgement
+        return id(m) as id,m.name as name,m.path as path,m.relation as relation
+	</select>
+
+</mapper>

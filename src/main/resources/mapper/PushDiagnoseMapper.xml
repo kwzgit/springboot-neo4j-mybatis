@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.PushDiagnoseMapper">
+
+    <resultMap id="diagnoseMap" type="com.study.model.PushDiagnoseModel">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="disId" column="disId"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <select id="getDiagnose" resultMap="diagnoseMap">
+		match (n:Condition)-[r:确诊|:拟诊|:警惕]->(m:Disease)
+        where n.name in #{inputs}
+        with distinct m,r
+        return id(m) as id,m.name as name, m.disId as disId,type(r) as type
+	</select>
+
+</mapper>
