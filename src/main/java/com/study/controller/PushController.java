@@ -1,8 +1,8 @@
 package com.study.controller;
 
-import com.study.mapper.UntowardEffectMapper;
-import com.study.model.UntowardEffectModel;
-import com.study.model.param.NeoParamVO;
+import com.study.mapper.PushTreatMapper;
+import com.study.model.DrugsMedicationModel;
+import com.study.model.result.NeoParamVO;
 import com.study.service.Push;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +20,9 @@ import java.util.*;
 public class PushController {
     @Autowired
     private Push push;
+    @Autowired
+    private PushTreatMapper pushTreatMapper;
+
 
     /**
      * 图谱推送诊断
@@ -42,9 +45,24 @@ public class PushController {
     @PostMapping("/getUntowardEffect")
     public Map<String, List<String>> getTreat(@RequestBody NeoParamVO neoParamVO){
         String webDiag = neoParamVO.getWebDiag();
+        List<String> inputs = neoParamVO.getInputs();
         List<String> webDiags = Arrays.asList(webDiag.split(","));
         Map<String, List<String>> untowardEffectModels = push.pushUntowardEffect(webDiags);
+
+        push.pushTreat(webDiags,inputs);
         return untowardEffectModels;
     }
 
+    @PostMapping("/getUntowardEffect1")
+    public List<DrugsMedicationModel> getTreat1(@RequestBody NeoParamVO neoParamVO){
+        String webDiag = neoParamVO.getWebDiag();
+        List<DrugsMedicationModel> drugsMedication = pushTreatMapper.getDrugsMedication(webDiag);
+        return drugsMedication;
+    }
+    @PostMapping("/getUntowardEffect2")
+    public List<DrugsMedicationModel> getTreat2(@RequestBody NeoParamVO neoParamVO){
+        String webDiag = neoParamVO.getWebDiag();
+        List<DrugsMedicationModel> drugsMedication = pushTreatMapper.getDrugsBIgShort(webDiag);
+        return drugsMedication;
+    }
 }

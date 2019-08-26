@@ -4,6 +4,7 @@ import com.study.model.UntowardEffectModel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 推送接口
@@ -23,6 +24,15 @@ public interface Push {
      * @return
      */
     Map<String, List<String>> pushUntowardEffect(List<String> webDiagList);
+
+    /**
+     * 根据输入的词推送不良反应
+     * @param inputs
+     * @return
+     */
+    Set<String> pushUeFromInputs(List<String> inputs);
+
+    void pushTreat(List<String> webDiagList,List<String> inputs);
 
 
 }

@@ -1,4 +1,4 @@
-package com.study.model.param;
+package com.study.model.result;
 
 import java.io.Serializable;
 import java.util.List;

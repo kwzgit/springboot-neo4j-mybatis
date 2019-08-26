@@ -8,7 +8,7 @@
         <result property="disId" column="disId"/>
         <result property="type" column="type"/>
     </resultMap>
-
+    <!--查找诊断的确诊，拟诊和警惕 -->
     <select id="getDiagnose" resultMap="diagnoseMap">
 		match (n:Condition)-[r:确诊|:拟诊|:警惕]->(m:Disease)
         where n.name in #{inputs}
@@ -16,4 +16,10 @@
         return id(m) as id,m.name as name, m.disId as disId,type(r) as type
 	</select>
 
+    <select id="getUe" resultMap="diagnoseMap">
+		match (n:Condition)-[r:确诊|:拟诊]->(m:UntowardEffect)
+        where n.name in #{inputs}
+        with distinct m,r
+        return id(m) as id,m.name as name, m.disId as disId,type(r) as type
+	</select>
 </mapper>
