@@ -47,10 +47,9 @@ public class PushController {
         String webDiag = neoParamVO.getWebDiag();
         List<String> inputs = neoParamVO.getInputs();
         List<String> webDiags = Arrays.asList(webDiag.split(","));
-        Map<String, List<String>> untowardEffectModels = push.pushUntowardEffect(webDiags);
 
         push.pushTreat(webDiags,inputs);
-        return untowardEffectModels;
+        return null;
     }
 
     @PostMapping("/getUntowardEffect1")

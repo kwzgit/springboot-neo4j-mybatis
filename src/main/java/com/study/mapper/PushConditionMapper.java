@@ -7,5 +7,5 @@ import java.util.List;
 public interface PushConditionMapper {
 
     List<ConditionModel> firstCondition(@Param("inputs") List<String> inputs);
-    List<ConditionModel> secondCondition(@Param("inputs") List<String> inputs);
+    List<ConditionModel> secondCondition(@Param("inputs") List<String> inputs,@Param("newInputs") List<String> newInputs);
 }

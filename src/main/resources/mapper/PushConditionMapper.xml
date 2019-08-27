@@ -18,6 +18,9 @@
     <select id="secondCondition" parameterType="list" resultMap="conditionMap">
 		match (n:Condition)-[r:诊断依据]->(m:Condition)
         where n.name in #{inputs}
+        with m,#{newInputs} as data
+        match (n)-[r:诊断依据]->(m:Condition)
+        where n.name in data
         with m, count(distinct r) as sd,m.path as jundgement
         where sd>=jundgement
         return id(m) as id,m.name as name,m.path as path,m.relation as relation

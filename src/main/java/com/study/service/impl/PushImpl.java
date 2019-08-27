@@ -247,13 +247,14 @@ public class PushImpl implements Push {
 
     public void pushTreat(List<String> webDiagList, List<String> inputs) {
         Map<String, List<String>> webUEMap = this.pushUntowardEffect(webDiagList);
+        List<String> beginIn = inputs;
         Set<String> inputsUE = this.pushUeFromInputs(inputs);
         //处理治疗
-        Map<String, List> diseFilds = new HashMap<String, List>();
+        Map<String, List<String>> diseFilds = new HashMap<String, List<String>>();
         if(webDiagList.size()>0){
             for (int i = 0;i<webDiagList.size();i++) {
                 List<String> fildsList = new ArrayList<String>();
-                fildsList.addAll(inputs);
+                fildsList.addAll(beginIn);
                 fildsList.addAll(inputsUE);
                 for(int j = 0;j<webDiagList.size();j++){
                     if(i != j){
@@ -264,9 +265,9 @@ public class PushImpl implements Push {
             }
         }
         if(diseFilds != null && diseFilds.size()>0){
-            for (Map.Entry<String, List> df:diseFilds.entrySet()) {
+            for (Map.Entry<String, List<String>> df:diseFilds.entrySet()) {
                 String dis = df.getKey();
-                List inputss = df.getValue();
+                List<String> inputss = df.getValue();
                 //查找诊断对应的类和药物,包括类和药的排序
                 List<DrugsMedicationModel> drugsMedication = pushTreatMapper.getDrugsMedication(dis);
                 Map<String, LinkedHashMap<String, String>> contentMap = new LinkedHashMap<String, LinkedHashMap<String, String>>();
@@ -308,8 +309,12 @@ public class PushImpl implements Push {
                         }
                     }
                 }
+                System.out.println(dis+"\t"+inputss);
+                //处理禁用慎用药类
+                List<DrugsMedicationModel> jinShenDrugs = pushTreatMapper.getJinShenDrugs(dis, inputss);
+                //处理禁用慎用药
+                List<DrugsMedicationModel> jinShenMedication = pushTreatMapper.getJinShenMedication(dis, inputss);
                 System.out.println();
-
 
 
             }
@@ -325,25 +330,28 @@ public class PushImpl implements Push {
      * @return
      */
     public List<String> processInputs(List<String> inputs){
+        List<String> startList = new ArrayList<String>();
+        List<String> newList = new ArrayList<String>();
         List<ConditionModel> conditionModels = null;
         // 查询输入的词所在的number
         conditionModels = pushConditionMapper.firstCondition(inputs);
-        inputs.clear();
         if (conditionModels != null) {
             for (ConditionModel condition : conditionModels) {
-                inputs.add(condition.getName());
+                startList.add(condition.getName());
             }
         }
+        newList.addAll(startList);
         while (conditionModels.size() > 0) {
             //推出符合的诊断依据
-            conditionModels = pushConditionMapper.secondCondition(inputs);
+            conditionModels = pushConditionMapper.secondCondition(newList,startList);
             if (conditionModels.size() > 0) {
-                inputs.clear();
+                newList.clear();
                 for (ConditionModel condition : conditionModels) {
-                    inputs.add(condition.getName());
+                    newList.add(condition.getName());
+                    startList.add(condition.getName());
                 }
             }
         }
-        return inputs;
+        return newList;
     }
 }

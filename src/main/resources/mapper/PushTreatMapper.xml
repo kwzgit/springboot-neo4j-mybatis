@@ -8,6 +8,7 @@
         <result property="medication" column="medication"/>
         <result property="meRate" column="meRate"/>
     </resultMap>
+
     <!-- 获取疾病对应的药类和药-->
     <select id="getDrugsMedication" resultMap="treatMap">
         match (d:Disease)-[r0:推荐]->(m:Drugs)-[:包含]->(n:Medicine),(d:Disease)-[r1:推荐]->(n)
@@ -23,4 +24,17 @@
         return small as drugs, r0.p as dSort, big+'('+small+')' as medication, r1.rate as meRate
 	</select>
 
+    <!-- 获取疾病对应的禁用、慎用药-->
+    <select id="getJinShenMedication"  resultMap="treatMap">
+        match (n:Disease)-[:推荐]->(d:Medicine)-[r0:忌用|慎用]-(m)
+        where n.name=#{disName} and m.name in #{inptus}
+        return d.name as drugs,r0.p as dSort,type(r0) as medication,r0.rate as meRate
+	</select>
+
+    <!-- 获取疾病对应的禁用、慎用药类-->
+    <select id="getJinShenDrugs"  resultMap="treatMap">
+        match (n:Disease)-[:推荐]->(d:Drugs)-[r0:忌用|慎用]-(m)
+        where n.name=#{disName} and m.name in #{inptus}
+        return d.name as drugs,r0.p as dSort,type(r0) as medication,r0.rate as meRate
+	</select>
 </mapper>
