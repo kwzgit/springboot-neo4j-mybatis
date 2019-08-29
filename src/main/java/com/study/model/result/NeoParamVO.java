@@ -7,6 +7,7 @@ public class NeoParamVO implements Serializable {
 
     private List<String> inputs;//输入的词
     private String webDiag;
+    protected Integer disType;
 
     public List<String> getInputs() {
         return inputs;
@@ -24,5 +25,11 @@ public class NeoParamVO implements Serializable {
         this.webDiag = webDiag;
     }
 
+    public Integer getDisType() {
+        return disType;
+    }
 
+    public void setDisType(Integer disType) {
+        this.disType = disType;
+    }
 }

@@ -1,6 +1,7 @@
 package com.study.service;
 
 import com.study.model.UntowardEffectModel;
+import com.study.model.bean.Filnlly;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public interface Push {
      */
     Set<String> pushUeFromInputs(List<String> inputs);
 
-    void pushTreat(List<String> webDiagList,List<String> inputs);
+    Map<String, Filnlly> pushTreat(List<String> webDiagList, List<String> inputs, Integer disType);
 
 
 }

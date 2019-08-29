@@ -1,7 +1,6 @@
 package com.study.controller;
 
-import com.study.mapper.PushTreatMapper;
-import com.study.model.DrugsMedicationModel;
+import com.study.model.bean.Filnlly;
 import com.study.model.result.NeoParamVO;
 import com.study.service.Push;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.*;
 
 /**
@@ -20,9 +18,6 @@ import java.util.*;
 public class PushController {
     @Autowired
     private Push push;
-    @Autowired
-    private PushTreatMapper pushTreatMapper;
-
 
     /**
      * 图谱推送诊断
@@ -42,26 +37,14 @@ public class PushController {
      * @param neoParamVO
      * @return
      */
-    @PostMapping("/getUntowardEffect")
-    public Map<String, List<String>> getTreat(@RequestBody NeoParamVO neoParamVO){
+    @PostMapping("/getTreat")
+    public Map<String, Filnlly> getTreat(@RequestBody NeoParamVO neoParamVO){
         String webDiag = neoParamVO.getWebDiag();
+        Integer disType = neoParamVO.getDisType();
         List<String> inputs = neoParamVO.getInputs();
         List<String> webDiags = Arrays.asList(webDiag.split(","));
-
-        push.pushTreat(webDiags,inputs);
-        return null;
+        Map<String, Filnlly> filnllyMap = push.pushTreat(webDiags, inputs, disType);
+        return filnllyMap;
     }
 
-    @PostMapping("/getUntowardEffect1")
-    public List<DrugsMedicationModel> getTreat1(@RequestBody NeoParamVO neoParamVO){
-        String webDiag = neoParamVO.getWebDiag();
-        List<DrugsMedicationModel> drugsMedication = pushTreatMapper.getDrugsMedication(webDiag);
-        return drugsMedication;
-    }
-    @PostMapping("/getUntowardEffect2")
-    public List<DrugsMedicationModel> getTreat2(@RequestBody NeoParamVO neoParamVO){
-        String webDiag = neoParamVO.getWebDiag();
-        List<DrugsMedicationModel> drugsMedication = pushTreatMapper.getDrugsBIgShort(webDiag);
-        return drugsMedication;
-    }
 }
