@@ -251,6 +251,13 @@ public class PushImpl implements Push {
         return ueSet;
     }
 
+    /**
+     * 推送治疗方案
+     * @param webDiagList
+     * @param inputs
+     * @param disType
+     * @return
+     */
     public Map<String, Filnlly> pushTreat(List<String> webDiagList, List<String> inputs,Integer disType) {
         Map<String, Filnlly> diagTreat = new HashMap<String, Filnlly>();
         Map<String, List<String>> webUEMap = this.pushUntowardEffect(webDiagList);
@@ -360,6 +367,25 @@ public class PushImpl implements Push {
         return diagTreat;
     }
 
+    /**
+     * 指标推送
+     * @param inputs
+     * @return
+     */
+    @Override
+    public Set<String> pushInd(List<String> inputs) {
+        //查找指标推送
+        Set<String> indSet = new HashSet<String>();
+        //根据输入的词找诊断依据
+        List<String> processInputs = this.processInputs(inputs);
+        List<PushDiagnoseModel> inds = pushDiagnoseMapper.getInd(processInputs);
+        if(inds.size() > 0){
+            for (PushDiagnoseModel pdm:inds) {
+                indSet.add(pdm.getName());
+            }
+        }
+        return indSet;
+    }
 
     /**
      * 处理输入的词

@@ -33,7 +33,21 @@ public interface Push {
      */
     Set<String> pushUeFromInputs(List<String> inputs);
 
+    /**
+     * 推送治疗方案
+     * @param webDiagList
+     * @param inputs
+     * @param disType
+     * @return
+     */
     Map<String, Filnlly> pushTreat(List<String> webDiagList, List<String> inputs, Integer disType);
+
+    /**
+     * 指标推送
+     * @param inputs
+     * @return
+     */
+    Set<String> pushInd(List<String> inputs);
 
 
 }

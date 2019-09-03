@@ -19,4 +19,11 @@ public interface PushDiagnoseMapper {
      * @return
      */
     List<PushDiagnoseModel> getUe(@Param("inputs") List<String> inputs);
+
+    /**
+     * 根据输入的词获取指标
+     * @param inputs
+     * @return
+     */
+    List<PushDiagnoseModel> getInd(@Param("inputs") List<String> inputs);
 }

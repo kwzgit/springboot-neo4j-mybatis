@@ -15,9 +15,16 @@
         with distinct m,r
         return id(m) as id,m.name as name, m.disId as disId,type(r) as type
 	</select>
-
+    <!--根据输入的词获取不良反应-->
     <select id="getUe" resultMap="diagnoseMap">
 		match (n:Condition)-[r:确诊|:拟诊]->(m:UntowardEffect)
+        where n.name in #{inputs}
+        with distinct m,r
+        return id(m) as id,m.name as name, m.disId as disId,type(r) as type
+	</select>
+    <!--根据输入的词获取指标-->
+    <select id="getInd" resultMap="diagnoseMap">
+		match (n:Condition)-[r:确诊|:拟诊]->(m:Indicators)
         where n.name in #{inputs}
         with distinct m,r
         return id(m) as id,m.name as name, m.disId as disId,type(r) as type
