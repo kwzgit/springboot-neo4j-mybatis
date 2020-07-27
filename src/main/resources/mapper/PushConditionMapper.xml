@@ -7,10 +7,23 @@
         <result property="name" column="name"/>
         <result property="path" column="path"/>
         <result property="relation" column="relation"/>
+
+        <collection property="conditions" ofType="com.study.model.ConditionModel">
+            <id property="id" column="id1"/>
+            <result property="name" column="name1"/>
+            <result property="path" column="path1"/>
+            <result property="relation" column="relation1"/>
+        </collection>
     </resultMap>
 
     <select id="firstCondition" parameterType="list" resultMap="conditionMap">
 		match (h)-[r:属于|:诊断依据]->(c:Condition)
+<!--        <where>-->
+<!--            <if test="param1 != null ">-->
+<!--                h.name in #{inputs}-->
+<!--&#45;&#45;                 h.name =~ #{name}-->
+<!--            </if>-->
+<!--        </where>-->
         where h.name in #{inputs}
         return id(c) as id,c.name as name,c.path as path,c.relation as relation
 	</select>
@@ -25,5 +38,19 @@
         where sd>=jundgement
         return id(m) as id,m.name as name,m.path as path,m.relation as relation
 	</select>
+
+    <!--<insert id="add">
+        create(u:user{name:#{model.name},age:#{model.age},sex:#{model.sex}})
+    </insert>
+
+    <update id="update">
+        match (u:user)
+        where id(u) = #{model.id}
+        set u.name = #{model.name},u.age = #{model.age},u.sex = #{model.sex}
+    </update>
+
+    <delete id="deleteById">
+        match (u:user) where id(u) = #{id} delete u
+    </delete>-->
 
 </mapper>

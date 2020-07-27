@@ -10,6 +10,7 @@ public class ConditionModel {
     private String name;
     private String relation;
     private Integer path;
+    private List<String> conditions;
 
     public Long getId() {
         return id;
@@ -43,4 +44,11 @@ public class ConditionModel {
         this.path = path;
     }
 
+    public List<String> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<String> conditions) {
+        this.conditions = conditions;
+    }
 }
